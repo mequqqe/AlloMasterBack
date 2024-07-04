@@ -20,7 +20,10 @@ public class CompanyService : ICompanyService
             _companyRepository = companyRepository;
             _configuration = configuration;
         }
-
+        public async Task<Company> GetCompanyByIdAsync(int id)
+        {
+            return await _companyRepository.GetCompanyByIdAsync(id);
+        }
         public async Task<Company> RegisterAsync(Company company)
         {
             var existingCompany = await _companyRepository.GetByEmailAsync(company.Mail);

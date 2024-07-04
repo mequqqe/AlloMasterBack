@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using AlloMasterBackend.Models;
+using System.Security.Claims;
 
 namespace AlloMasterBackend.Controllers
 {
@@ -44,11 +45,45 @@ namespace AlloMasterBackend.Controllers
                 return Unauthorized(ex.Message);
             }
         }
+        [HttpGet("my-company")]
+        public async Task<IActionResult> GetCompanyInfo()
+        {
+            var companyIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? User.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+            if (companyIdClaim == null)
+            {
+                return Unauthorized(new { Message = "nameid claim not found" });
+            }
+
+            if (!int.TryParse(companyIdClaim, out var companyId))
+            {
+                return Unauthorized(new { Message = "Invalid nameid value" });
+            }
+
+            var company = await _companyService.GetCompanyByIdAsync(companyId);
+            if (company == null)
+            {
+                return NotFound(new { Message = "Company not found." });
+            }
+
+            var companyInfo = new
+            {
+                company.Id,
+                company.Name,
+                company.Mail,
+                company.PhoneNumber,
+                company.CompanyName
+            };
+
+            return Ok(companyInfo);
+        }
     }
+}
+
+    
 
     public class LoginRequest
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
-}
+

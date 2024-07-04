@@ -7,6 +7,7 @@ namespace AlloMasterBackend.Repository
 {
 
     public class CompanyRepository : ICompanyRepository
+
     {
         private readonly AlloMasterDbContext _context;
 
@@ -29,6 +30,11 @@ namespace AlloMasterBackend.Repository
         {
             await _context.Company.AddAsync(company);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Company> GetCompanyByIdAsync(int id)
+        {
+            return await _context.Company.FindAsync(id);
         }
     }
 }
