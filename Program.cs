@@ -2,19 +2,24 @@
 using AlloMasterBackend.Data;
 using AlloMasterBackend.Repository;
 using AlloMasterBackend.Service;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+ using Microsoft.AspNetCore.Authentication.JwtBearer;
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.IdentityModel.Tokens;
+ using Microsoft.OpenApi.Models;
 
-var builder = WebApplication.CreateBuilder(args);
+ var builder = WebApplication.CreateBuilder(args);
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AlloMasterDbContext>(options => options.UseNpgsql(connection));
 // In ConfigureServices method
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>(); 
+ builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+ builder.Services.AddScoped<IBranchService, BranchService>();
+ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+ 
 
 builder.Services.AddControllers();
 

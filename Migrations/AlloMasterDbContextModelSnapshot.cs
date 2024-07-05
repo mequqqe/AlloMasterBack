@@ -134,6 +134,50 @@ namespace AlloMasterBackend.Migrations
                     b.ToTable("Counterparty");
                 });
 
+            modelBuilder.Entity("AlloMasterBackend.Models.Employees", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Mail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Employees");
+                });
+
             modelBuilder.Entity("AlloMasterBackend.Models.ProductDirectory", b =>
                 {
                     b.Property<int>("Id")
@@ -208,6 +252,32 @@ namespace AlloMasterBackend.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("RepairStatus");
+                });
+
+            modelBuilder.Entity("AlloMasterBackend.Models.Roles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Permissions")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("AlloMasterBackend.Models.Sales", b =>
@@ -335,6 +405,33 @@ namespace AlloMasterBackend.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("AlloMasterBackend.Models.Employees", b =>
+                {
+                    b.HasOne("AlloMasterBackend.Models.Branches", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AlloMasterBackend.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AlloMasterBackend.Models.Roles", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("AlloMasterBackend.Models.ProductDirectory", b =>
                 {
                     b.HasOne("AlloMasterBackend.Models.Company", "Company")
@@ -347,6 +444,17 @@ namespace AlloMasterBackend.Migrations
                 });
 
             modelBuilder.Entity("AlloMasterBackend.Models.RepairStatus", b =>
+                {
+                    b.HasOne("AlloMasterBackend.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("AlloMasterBackend.Models.Roles", b =>
                 {
                     b.HasOne("AlloMasterBackend.Models.Company", "Company")
                         .WithMany()

@@ -17,4 +17,5 @@ public class AlloMasterDbContext : DbContext
     public DbSet<Sales> Sales { get; set; }
     public DbSet<ServiceDirectory> ServiceDirectory { get; set; }
     public DbSet<TypePayment> TypePayment { get; set; }
+    public DbSet<Employees> Employees { get; set; }
 }
